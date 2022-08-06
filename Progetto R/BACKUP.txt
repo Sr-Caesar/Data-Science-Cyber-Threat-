@@ -1,0 +1,834 @@
+---
+title: "Crimini Informatici"
+author: "a cura di"
+date: 'Giulio Sanna'
+output:
+  slidy_presentation: default
+  html_document:
+    df_print: paged
+  ioslides_presentation: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.width ="900", out.width="400", warning = FALSE,message = FALSE)#,fig.width=12, fig.height=8
+```
+```{r echo=FALSE} 
+#sistemazione dei dati
+library(tibble)
+library(dtplyr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(stringr)
+library(readr)
+library(wordcloud2)
+library(usethis)
+library(devtools)
+setwd("C:/Users/Giuli/Desktop/Progetto R")
+uno <- read.csv("C:/Users/Giuli/Desktop/Progetto R/2021 Master Table.csv")
+zero <- read.csv("C:/Users/Giuli/Desktop/Progetto R/2020 Master Table.csv ")
+under <- read.csv("C:/Users/Giuli/Desktop/Progetto R/2018 Master Table.csv")
+epty <- function(mydata){ # epty(under) -> a
+  (mydata %>% filter(Target.Class==""))$ID -> p    ##cerco linee vuote -> le trovo -> prendo il loro ID
+    mydata[-p,] -> mydata #elimino le linee vuote basandomi sul ID preso sopra
+}
+##Sistemazione di UNDER
+x=1
+for(x in 1:nrow(under)) {
+  under$ID[x] = x} 
+under%>%
+  select(ID, Date, Author, Target, Description, Attack, Target.Class, Attack.Class, Country) -> under
+under["Attack"][under["Attack"] == "Account Hijacking Fraud"] <- "Account Hijacking"
+under["Attack"][under["Attack"] == "App Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "BGP Poisoning or DNS Hijacking"] <- "BGP Hijacking"
+under["Attack"][under["Attack"] == "Brute-Force/Credential Stuffing"] <- "Brute-Force"
+under["Attack"][under["Attack"] == "Credential Stuffng"] <- "Credential Stuffing"
+under["Attack"][under["Attack"] == "Brute Force (Credential Stuffing)"] <- "Brute-Force"
+under["Attack"][under["Attack"] == "Brute Force/Remote Code Execution Vulnerability"] <- "Brute-Force"
+under["Attack"][under["Attack"] == "Apache Struts 2 Vulnerability"] <- "Apache Struts Vulnerabilities"
+under["Attack"][under["Attack"] == "CVE-2018-15961 Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "DEOS Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "DirtyCow (CVE-2016-5195) andÂ Linux.Exploit.CVE-2013-2094 Vulnerabilities"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "DNS Hijack"] <- "DNS hijacking"
+under["Attack"][under["Attack"] == "DNS hjiacking"] <- "DNS hijacking"
+under["Attack"][under["Attack"] == "DNS Hijacking"] <- "DNS hijacking"
+under["Attack"][under["Attack"] == "Drupal Vulnerabilities"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Drupalgeddon 2 and Dirty Cow vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Drupalgeddon 2 vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "EOS Vulnerability"] <- "Crypto Vulnerability"
+under["Attack"][under["Attack"] == "EternalBlue vulnerability (CVE-2017-0144)"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Fake News Sites and Social Network Bots"] <- "Bots"
+under["Attack"][under["Attack"] == "Fake Twitter Account"] <- "Bots"
+under["Attack"][under["Attack"] == "Fake Twitter Accounts"] <- "Bots"
+under["Attack"][under["Attack"] == "Cisco ASA Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Hadoop Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Linkedin Bot"] <- "Bots"
+under["Attack"][under["Attack"] == "LinkedIn Bot"] <- "Bots"
+under["Attack"][under["Attack"] == "Magento Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Malicious browser extension"] <- "Malicious Browser Extensions"
+under["Attack"][under["Attack"] == "Malicious Browser Extension"] <- "Malicious Browser Extensions"
+under["Attack"][under["Attack"] == "Malicious code injection"] <- "Malicious Code Injection"
+under["Attack"][under["Attack"] == "Malicious Extension"] <- "Malicious Browser Extensions"
+under["Attack"][under["Attack"] == "Malicious JavaScript Injection"] <- "Malicious Code Injection"
+under["Attack"][under["Attack"] == "Malicious JS"] <- "Malicious Code Injection"
+under["Attack"][under["Attack"] == "Malicious Script"] <- "Malicious Code Injection"
+under["Attack"][under["Attack"] == "Malicious Script Injection"] <- "Malicious Code Injection"
+under["Attack"][under["Attack"] == "MikroTik Router Vulnerability (CVE-2018-14847)"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Misconfiguration"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Misconfigurations"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Misconfigured Ethereum Rigs"] <- "Crypto Vulnerability"
+under["Attack"][under["Attack"] == "Misconfigurations"] <- "Crypto Vulnerability"
+under["Attack"][under["Attack"] == "PHP 0-Day Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Pos Malware"] <- "Malware/PoS Malware"
+under["Attack"][under["Attack"] == "Printer misconfiguration"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "RDP Vulnerabilities/Misconfigurations"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Remote Device?"] <- "Unknown"
+under["Attack"][under["Attack"] == "Router Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "SIM Hijacking"] <- "SIM Swapping"
+under["Attack"][under["Attack"] == "Smart Contract Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Social-Network Phishing"] <- "Bots"
+under["Attack"][under["Attack"] == "Social Network Bot"] <- "Bots"
+under["Attack"][under["Attack"] == "Social Network Bots"] <- "Bots"
+under["Attack"][under["Attack"] == "Spambot"] <- "Bots"
+under["Attack"][under["Attack"] == "SQLi?"] <- "Unknown"
+under["Attack"][under["Attack"] == "ThinkPHP Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Twitter Bot"] <- "Bots"
+under["Attack"][under["Attack"] == "Twitter Bots"] <- "Bots"
+under["Attack"][under["Attack"] == "Undisclosed vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Unsecured MongoDB"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "UPnP Vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Vulnerabilities (CVE-2015-1427 and CVE-2014-3120)"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Vulnerability (CVE-2018-11776)"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Vulnerability (CVE-2018-15454)"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Vulnerability in Monero Code"] <- "Crypto Vulnerability"
+under["Attack"][under["Attack"] == "Vulnerable Linux Servers"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Vulnerable Magento Extensions"] <- "Malicious Browser Extensions"
+under["Attack"][under["Attack"] == "Wordpress plugin vulnerability"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "XSS"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Zero-Day Vulnerability in Bitmessage"] <- "Vulnerability"
+under["Attack"][under["Attack"] == "Zero-Day Vulnerability in Telegram"] <- "Vulnerability"
+under["Attack"][under["Attack"] == ">1"] <- "Unknown"
+under["Attack"][under["Attack"] == "Monero Vulnerability"] <- "Crypto Vulnerability"
+under["Attack"][under["Attack"] == "Wordpress Malicious Plugins"] <- "Malicious Plugins"
+under["Attack"][under["Attack"] == "SQLi"] <- "SQL Injection"
+under["Attack"][under["Attack"] == "Targeted Attack"] <- "Unknown"
+#under["Attack"][under["Attack"] == "DirtyCow (CVE-2016-5195) andÂ Linux.Exploit.CVE-2013-2094 Vulnerabilities"] <- "Vulnerability"
+# quest'ultimo comando non mi modifica il valore ( per via del carattere specile 'Â') quindi lo faccio manualmente
+under["Attack"][under["ID"]==118] <- "Vulnerability"
+##Sistemazione di ZERO
+zero["Attack.Class"][zero["Attack.Class"] == "CW"] <- "Cyber Warfare"
+zero["Attack.Class"][zero["Attack.Class"] == "CC"] <- "Cyber Crime"
+zero["Attack.Class"][zero["Attack.Class"] == "CE"] <- "Cyber Espionage"
+zero["Attack.Class"][zero["Attack.Class"] == "H"] <- "Hacktivism"
+zero["Attack.Class"][zero["Attack.Class"] == ">1"] <- "N/A"
+zero["Attack"][zero["Attack"] == "Account hijacking"] <- "Account Hijacking"
+zero["Attack"][zero["Attack"] == "API Exploit"] <- "Malicious Code Injection"
+zero["Attack"][zero["Attack"] == "Bitcoin vanity addresses"] <- "Scam"
+zero["Attack"][zero["Attack"] == "Brute-force"] <- "Brute-Force"
+zero["Attack"][zero["Attack"] == "Credential stuffing"] <- "Credential Stuffing"
+zero["Attack"][zero["Attack"] == "DNS Hijacking"] <- "DNS hijacking"
+zero["Attack"][zero["Attack"] == "Domain Spoofing"] <- "Scam"
+zero["Attack"][zero["Attack"] == "Evil cursor"] <- "Malware"
+zero["Attack"][zero["Attack"] == "Fake social Network accounts/groups/pages"] <- "Bots"
+zero["Attack"][zero["Attack"] == "Fake Social Network accounts/groups/pages"] <- "Bots"
+zero["Attack"][zero["Attack"] == "Malicious browser extension"] <- "Malicious Browser Extension"
+zero["Attack"][zero["Attack"] == "Malicious SEO redirection"] <- "SEO Poisoning"
+zero["Attack"][zero["Attack"] == "Malicious spam"] <- "Malicious Spam"
+zero["Attack"][zero["Attack"] == "Malicious Wordpress Plugin"] <- "Malicious Browser Extension"
+zero["Attack"][zero["Attack"] == "Malicous Autodesk plugin"] <- "Malicious Browser Extension"
+zero["Attack"][zero["Attack"] == "N/A"] <- "Unknown"
+zero["Attack"][zero["Attack"] == "Password-spraying"] <- "Password Spraying"
+zero["Attack"][zero["Attack"] == "Search Engine Poisoning"] <- "SEO Poisoning"
+zero["Attack"][zero["Attack"] == "Server-Side Ad Insertion (SSAI) Hijacking"] <- "SSAI Hijacking"
+zero["Attack"][zero["Attack"] == "Targeted attack"] <- "Targeted Attack"
+zero["Attack"][zero["Attack"] == "Zoom bombing"] <- "Account Hijacking"
+zero["Attack"][zero["Attack"] == "Zoom Bombing"] <- "Account Hijacking"
+zero["Attack"][zero["Attack"] == ">1"] <- "Unknown"
+##Sistemazione di UNO
+uno <- epty(uno) #elimino le righe vuote
+y=1
+for(y in 1:nrow(uno)) {
+  uno$ID[x] = x} 
+
+#metto in ordine gli UNO, eliminando le inutili ripetizioni dei valori sbagliati e conformandoli 
+
+uno["Target.Class"][uno["Target.Class"] == "Finance and insurance"] <- "K Financial and insurance activities"
+uno["Target.Class"][uno["Target.Class"] == "Human health and social work"] <- "Q Human health and social work activities"
+uno["Target.Class"][uno["Target.Class"] == "Professional, scientific and technical"] <- "M Professional scientific and technical activities"
+uno["Target.Class"][uno["Target.Class"] == "Information and communication"] <- "J Information and communication"
+uno["Target.Class"][uno["Target.Class"] == "Accommodation and food service"] <- "I Accommodation and food service activities"
+uno["Target.Class"][uno["Target.Class"] == "Multiple Industries"] <- "Y Multiple Industries"
+uno["Target.Class"][uno["Target.Class"] == "Education"] <- "P Education"
+uno["Target.Class"][uno["Target.Class"] == "Individual"] <- "X Individual"
+uno["Target.Class"][uno["Target.Class"] == "Unknown"] <- "Z Unknown"
+uno["Target.Class"][uno["Target.Class"] == "Manufacturing"] <- "C Manufacturing"
+uno["Target.Class"][uno["Target.Class"] == "Arts entertainment, recreation"] <- "R Arts entertainment and recreation"
+uno["Target.Class"][uno["Target.Class"] == "Public admin and defence, social security"] <- "O Public administration and defence, compulsory social security"
+uno["Target.Class"][uno["Target.Class"] == "Other service activities"] <- "S Other service activities"
+uno["Target.Class"][uno["Target.Class"] == "Water supply, waste mgmt, remediation"] <- "E Water supply, sewerage waste management, and remediation activities"
+uno["Target.Class"][uno["Target.Class"] == "Fintech"] <- "V Fintech"
+uno["Target.Class"][uno["Target.Class"] == "Administration and support service"] <- "N Administrative and support service activities"
+uno["Target.Class"][uno["Target.Class"] == "Wholesale and retail"] <- "G Wholesale and retail trade"
+uno["Target.Class"][uno["Target.Class"] == "Electricity, gas steam, air conditioning"] <- "D Electricity gas steam and air conditioning supply"
+uno["Target.Class"][uno["Target.Class"] == "Transportation and storage"] <- "H Transportation and storage"
+uno["Target.Class"][uno["Target.Class"] == "P"] <- "P Education"
+colnames(uno)[which(names(uno) == "Date.Reported")] <- "Date" #aggiusto i nomi delle colonne
+uno$Date.Occurred <- NULL # ed elimino le colonne supreflue così da avere 3 dataframe con 
+uno$Date.Discovered <- NULL # gli stessi attributi
+uno["Attack.Class"][uno["Attack.Class"] == "CC"] <- "Cyber Crime"
+uno["Attack.Class"][uno["Attack.Class"] == "CE"] <- "Cyber Espionage"
+uno["Attack.Class"][uno["Attack.Class"] == "H"] <- "Hacktivism"
+uno["Attack.Class"][uno["Attack.Class"] == "CW"] <- "Cyber Warfare"
+uno["Attack.Class"][uno["Attack.Class"] == ">1"] <- "N/A"
+uno["Attack.Class"][uno["Attack.Class"] == "CE?"] <- "Cyber Espionage"
+uno["Attack.Class"][uno["Attack.Class"] == "CC/CE"] <- "Cyber Espionage"
+uno["Attack.Class"][uno["Attack.Class"] == "CCC"] <- "Cyber Crime"
+
+uno["Attack"][uno["Attack"] == ">1"] <- "Unknown"
+uno["Attack"][uno["Attack"] == ">1 (Malware, DDoS)"] <- "Unknown"
+uno["Attack"][uno["Attack"] == "0-Day vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Accellion Vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Account Takeover"] <- "Account Hijacking"
+uno["Attack"][uno["Attack"] == "Account Takeover via Teamviewer"] <- "Account Hijacking"
+uno["Attack"][uno["Attack"] == "Atlassian vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Brute-force"] <- "Brute-Force"
+uno["Attack"][uno["Attack"] == "Brute Force"] <- "Brute-Force"
+uno["Attack"][uno["Attack"] == "Business Email Comrpomise"] <- "Business Email Compromise"
+uno["Attack"][uno["Attack"] == "Cloud Account Takeover"] <- "Account Hijacking"
+uno["Attack"][uno["Attack"] == "Cloud misconfiguration"] <- "Misconfiguration"
+uno["Attack"][uno["Attack"] == "Cloud Misconfiguration"] <- "Misconfiguration"
+uno["Attack"][uno["Attack"] == "Credential stuffing"] <- "Credential Stuffing"
+uno["Attack"][uno["Attack"] == "Crypto scam"] <- "Crypto Scam"
+uno["Attack"][uno["Attack"] == ""] <- "Unknown"
+uno["Attack"][uno["Attack"] == "DNS Hijacking"] <- "DNS hijacking"
+uno["Attack"][uno["Attack"] == "Fake Social Accounts"] <- "Bots"
+uno["Attack"][uno["Attack"] == "Fake Social Nettworks Accounts"] <- "Bots"
+uno["Attack"][uno["Attack"] == "Fake Social Networks Accounts"] <- "Bots"
+uno["Attack"][uno["Attack"] == "Fake social media/web pages"] <- "Fake Websites"
+uno["Attack"][uno["Attack"] == "Fake Web Sites"] <- "Fake Websites"
+uno["Attack"][uno["Attack"] == "Fake websites, social media profiles"] <- "Bots"
+uno["Attack"][uno["Attack"] == "Fake websites/social network accounts"] <- "Bots"
+uno["Attack"][uno["Attack"] == "Fake Websites/Social Network accounts"] <- "Bots"
+uno["Attack"][uno["Attack"] == "Malicious Browser Extension"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Malicious Chrome  Extension"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Malicious Chrome extension"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Malicious Chrome Extension"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Malicious Docker Image"] <- "Malware"
+uno["Attack"][uno["Attack"] == "Malicious Docker Images"] <- "Malware"
+uno["Attack"][uno["Attack"] == "Malicious Firefox Extension"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Malicious GitHub commit"] <- "Malware"
+uno["Attack"][uno["Attack"] == "Malicious Google search ads"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Malicious OWA Module"] <- "Account Hijacking"
+uno["Attack"][uno["Attack"] == "Malicious Script Injection"] <- "Malicious Code Injection"
+uno["Attack"][uno["Attack"] == "Malicious spam"] <- "Malicious Spam"
+uno["Attack"][uno["Attack"] == "Malicious Wordpress plugin"] <- "Malicious Browser Extension"
+uno["Attack"][uno["Attack"] == "Microsoft Exchange Server vulnerabilities"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Misconfiguration (weak password)"] <- "Misconfiguration"
+uno["Attack"][uno["Attack"] == "Multiple techniques"] <- "Unknown"
+uno["Attack"][uno["Attack"] == "Multiple techniques including phishing, brute force login attempts, and a 'pass-the-cookie' attack."] <- "Unknown"
+uno["Attack"][uno["Attack"] == "Multiple vulnerabilities"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Multiple Vulnerabilities"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Multiple vulnerabilities (CVE-2019-11510, CVE-2020-8260, CVE-2020-8243, CVE-2021-2289)"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Multiple vulnerabilities (CVE-2021-3007, CVE-2020-7961, CVE-2020-28188)"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Password-spray"] <- "Password Spraying"
+uno["Attack"][uno["Attack"] == "password-spraying"] <- "Password Spraying"
+uno["Attack"][uno["Attack"] == "Password-spraying"] <- "Password Spraying"
+uno["Attack"][uno["Attack"] == "Password spray"] <- "Password Spraying"
+uno["Attack"][uno["Attack"] == "password spray and brute-force"] <- "Brute-Force"
+uno["Attack"][uno["Attack"] == "PetitPotam NTLM Relay"] <- "NTLM Relay"
+uno["Attack"][uno["Attack"] == "ProxyLogon Vulnerabilities (CVE-2021-26855, CVE-2021-26857, CVE-2021-26858 CVE-2021-26855)"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "ProxyShell vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Pulse Secure vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "SIM swap"] <- "SIM Swapping"
+uno["Attack"][uno["Attack"] == "SonarQube zero-day vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "SPAM"] <- "Spam"
+uno["Attack"][uno["Attack"] == "SQLi"] <- "SQL Injection"
+uno["Attack"][uno["Attack"] == "Undisclosed KGUARD DVR vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Undisclosed vulnerabilities"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Undisclosed vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Undisclosed vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Unknown 0-day vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "vBulletin vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "VMware vCenter vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "VPN vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Vulnerable printers"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Vulnerable Wordpress plugins"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Watering Hole (CVE-2020-1380, CVE-2021-26411)"] <- "Watering Hole"
+uno["Attack"][uno["Attack"] == "Wind River Systems"] <- "Unknown"
+uno["Attack"][uno["Attack"] == "Windows Bit locker"] <- "Unknown"
+uno["Attack"][uno["Attack"] == "Wordpress plugin vulnerability"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Wordpress plugin vulnerability (CVE-2021-24175)"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Wordpress plugin vulnerability vulnerabilities"] <- "Vulnerability"
+uno["Attack"][uno["Attack"] == "Zoom bombing"] <- "Account Hijacking"
+uno["Attack"][uno["Attack"] == "Zoom Bombing"] <- "Account Hijacking"
+uno["Attack"][uno["Attack"] == "Targeted Attack"] <- "Unknown"
+for(i in 1:length(uno$Attack)){
+  if(substr(uno$Attack[i],0,3)== "CVE"){
+  uno$Attack[i] <- "Vulnerability" 
+  }
+}#ragruppo tutte le vulnerabilità ed esposizioni comuni in ""Vulnerability
+```
+```{r, echo=FALSE}
+#inizializzazione delle funzioni utilizzate
+
+#Functions #note: to use adding by reference -->>> dataset <- adding(integer, dataset)
+adding <- function(my_date, my_frame){ # mydate integer 1:12||||||| my_frame[1]=months my_frame[2]=frequency
+  if(my_date < 13 ){
+    tower <- my_frame$Frequenza
+    tower[my_date] <- tower[my_date] +1
+    my_frame[2] <- tower
+    return(my_frame)
+  }else{
+  print("fail to proceed")
+  }
+  }#end function
+settingID <- function(my_frame){
+  my_frame$ID <- seq.int(nrow(my_frame))
+}#end function
+normalization <- function(unordered){#input: table(unordered$Country)
+data.frame(table(unordered$Country)) -> mapx 
+mapx['ID'] <- settingID(mapx)
+colnames(mapx) <- c("Stato", "Frequenza", "ID") 
+mapx <- mapx[,c("ID","Stato","Frequenza")]
+}#fornisco un dataset e mi ricreo le map
+sendchar <- function(map){#input: dataframe
+  index = c()#inizializzo un vettore vuoto che andro a riempire con gli indici degli elementi diffettosi
+    for (x in 1:length(map[[2]])) {
+      if(nchar(toString(map[[2]][map$ID == x])) > 3){
+            if(map[[3]][map$ID == x] > 1){
+                  mult = map[[3]][map$ID == x]
+                  for (y in 2:mult) {
+                    index <-append(index, x)#riprendo quelli con una freq > 1, ma faccio 2:mult, per quando esce
+                  }
+            }
+        index <-append(index, x)#in caso di mult>1 qui riprendo l'ultima occorenza
+        } 
+    }#prendo tutti gli indici anche quelli con una frequenza maggiore di 1, e che quindi vanno ripetuti
+  index <- index[!is.na(index)]
+  alfa <- c()#inizializzo un vettore che andrò a riempire con gli elementi 
+    for (x in 1:length(index)) {
+      alfa[x] <- toString(c(map[[2]][map$ID == index[x]]))
+    }
+  alfa[!alfa %in% c("N/A")] -> alfa
+  strsplit(alfa, split=" ") %>%
+  unlist() -> alfa
+}###END FUNCTION output: un vettore con delle stringhe rappresentano degli stati
+newSpot <-function(my_map,states){#my_map=dataframe    state= vattore con gli stati
+    for (x in 1:length(states)) {
+    if(states[x] %in%  my_map[[2]]){
+      next
+      }else{
+        my_map %>%
+          add_row(ID = length(my_map[[1]]), Stato = states[x], Frequenza=0) ->my_map
+    }
+    }
+  return(my_map)
+}#output: aggiungo a my_map nuove righe se in states ci sono degli stati non presenti in my_map
+addState <- function(my_map, states){ #map-> map series   state = vettori di stringhe con gli elementi formatti da coppie di pasi "uk""it"
+    for (x in 1:length(states)) {
+      for (y in 1:length(my_map[[2]])) {
+             if( states[x] == my_map[[2]][y]){
+               my_map[[3]][y] <- my_map[[3]][y]+1 
+             }
+        }
+    }
+  return(my_map)
+    }###END FUNCTION output:aumenta la frequenza degli stati che fornisco a my_map tramite il vettore states
+#HOW TO USE addStat(newSpot(map), sendchar())
+delTwin <- function(my_map){### elimino tutte le tuple dove ci sono doppi stati i quali li ho gia suddivisi e contati
+  cancel = c()
+  for (x in 1:length(my_map[[2]])) {
+    if(nchar(toString(my_map[[2]][x]))>3){
+    cancel <- append(cancel,my_map[[1]][x])}
+  }
+   my_map <- my_map[ !(my_map$ID %in% cancel),]
+   my_map['ID'] <- settingID(my_map)
+   my_map <- my_map[,c("ID","Stato","Frequenza")]
+   my_map <- my_map[-c(my_map[[1]][my_map$Stato=="N/A"],my_map[[1]][my_map$Stato==">1"],
+                       my_map[[1]][my_map$Stato=="-"],my_map[[1]][my_map$Stato==">"]),]
+}
+```
+ 
+<link rel="/Utenti/Giuli/Desktop/Progetto R/file.css" href="file.css">
+
+<h1 id=hacker> Hacker o Cracker?</h1>
+<div id=back>
+  <span class="flex-container">
+  <div id=white style="width:50%"> <p> <em><strong>Hacker</strong></em> è il nome che spesso viene dato a quelle entità criminose che sfruttano l'informatica per un benessere personale, in realtà gli <em>Hacker</em> sono degli appasionati dell'informatica che spesso si ritrovano a violare sistemi di sicurezza per scopo quasi del tutto academico, molti di questi infatti aiutano i proprietari di tali sistemi a renderli più sicuri.</p>
+  <p>Tuttavia in quella che oggi è una vera e propria cultura etica Hacker, questi ultimi sono concettualmente divisi in tre categorie <cite>White Hat</cite>, <cite>Grey Hat</cite>, <cite>Black Hat</cite>, queste 3 suddivisioni dovrebbero raffigurare la <em>nobiltà</em> delle azione di un hacker</p></div>
+  
+  <div id=black style="width:50%"> <p><em><strong>Cracker</em></strong> o pirata informatico è colui che spezza e danneggia sistemi di sicurezza per un tornaconto personale (spionaggio industriale,frodi,estorsioni...), un cracker spesso utilizza tecnologie di <em>port-scanning</em> per individuare vulnerabilità in una macchina e tramite queste può accedere a console remote per effetuare uno scalo di privilegi ottenendo lo status di <strong>Root</strong>.</p>
+  <p> Lo status di <strong>Root</strong> si rivela essenziale per nascondere le proprie tracce, fare <cite>sniffing</cite> di dati in transito, o addirittura modificare il <code>Kernel</code> per dirottarne le  System Call</div>
+  </span>
+  
+</div>
+## Obiettivi Più Colpiti Del Primo Anno
+<p>Nel 2018 abbiamo una situazione che rispecchia le ipotesi immaginate, ovvero al primo posto troviamo gli elementi più vulnerabili, meno protetti e spesso ignoranti in materia di sicurezza, e quindi facilmente vittime di attacchi contingenti quali phishing, Virus, Mitm, ecc...</p> 
+<p>Al giorno d'oggi le aziende informatiche investono molto sullo sviluppo di <strong>Firewall</strong> e <strong>Antivirus</strong> tuttavia sono i consumatori che in primo luogo dovrebbero tutelare i propri sistemi con semplici accorgimenti che spesso vengono ignorati.
+Questa tendenza a trascurare le più semplici contro misure comporta un aumento sempre crescente di attacchi, si stima che il costo del crimine informatico sia radoppiato negli ultimi 7 anni e ad oggi si aggiri sui 10 trilioni (10<sup>18</sup>) all'anno, gli attacchi effettuati invece si sono quintuplicati negli ultimi 7 anni.</p> <br>
+<em class="src">Source:</em>  <a class="replink" href="https://privacygdpr.it/news-privacy-sanita/sicurezza-informatica-quanto-costano-gli-attacchi-cyber-e-limportanza-di-proteggere-i-sistemi/#:~:text=Si%20stima%20che%20i%20costi,quintuplicati%20dallo%20scoppio%20della%20pandemia.">Privacy GDPR</a>
+```{r, fig.align='center',echo=FALSE, out.width="70%",fig.width=12.3, fig.height=8}
+table(under$Target.Class) / length(under$Target.Class) -> a #frequenza relativa
+a[rev(order(a))] -> a #metto in ordine a seconda della frequenza maggiore
+sum(a[9:20]) -> others #ultimi elementi li raggruppo in other!! circa 20%
+a[1:9] -> a
+append(a,others,9) -> a
+Targets = c("Individual",
+            "Multiple Industries",
+            "Public administration and defence",
+            "Human health and social work activities",
+            "Financial and insurance activities",
+            "Education", 
+            "Information and communication",
+            "Arts entertainment and recreation", 
+            "Fintech",
+            "other")
+
+slices <- c(a)
+pct <- round(slices/sum(slices)*100)
+Targets <- paste(Targets, pct)
+Targets <- paste(Targets, "%", sep = "")
+pie(slices,labels = Targets, col=rainbow(length(Targets)),
+        radius = 1, lty=1, main="Obbiettivi più colpiti 2018")
+```
+
+## Obiettivi più colpiti Del Secondo Anno
+<p>
+Nel 2020 notiamo un interessante diminuzione del 10%  degli attacchi recati ai singoli individui ma anche un aumento del 4% sulle industrie, 
+probabilmente dovuto al fatto che nel 2020 molte aziende si sono interfacciate con lo <strong>Smart Working</strong> molte utilizzando metodologie poco sicure o piataforme poco sicure.</p>
+<p><em>Basti ricordare che in aprile 2020, ci sono stati più 500 mila furti di account Zoom, i quali sono stati poi rivenduti nel Dark Web, questo fu l'inizio di molti attacchi diretti a queste nuove piattaforme che si sono ritrovate ad avere in pochissimo tempo millioni di nuovi uteti<em>
+
+<em class="src">Source:</em>  <a class="replink" href="https://www.repubblica.it/tecnologia/sicurezza/2020/04/19/news/videchat_zoom_ancora_sotto_attacco_oltre_500_mila_credenziali_finiscono_sul_dark_web-254477620/">La Repubblica</a>
+</p>
+```{r, fig.align='center',echo=FALSE, out.width="70%",fig.width=12.3, fig.height=8}
+table(zero$Target.Class) / length(zero$Target.Class) -> a #frequenza relativa
+a[rev(order(a))] -> a #metto in ordine a seconda della frequenza maggiore
+sum(a[8:20]) -> others #ultimi elementi li raggruppo in other!! circa 20%
+a[1:8] -> a
+append(a,others,9) -> a
+Targets = c("Multiple Industries",
+            "Individual",
+            "Public administration and defence",
+            "Human health and social work activities",
+            "Education",
+            "Financial and insurance activities", 
+            "Professional Scientific and technical activities",
+            "Manufacturing", 
+            "Other")
+
+
+slices <- c(a)
+pct <- round(slices/sum(slices)*100)
+Targets <- paste(Targets, pct)
+Targets <- paste(Targets, "%", sep = "")
+pie(slices,labels = Targets, col=rainbow(length(Targets)),
+        radius = 1, lty=1, main="Obbiettivi più colpiti 2020")
+```
+
+## Obiettivi più colpiti Del Terzo Anno
+<p>
+Nel 2021 notiamo un continuo aumentare delle industrie ed un leggero calo agli individui, tuttavia anche un interessante <b>aumento del 3%</b> di attacchi effettuati contro la <strong>Sanità</strong>, questo aumento potrebbe essere corelato alla campagna vaccinale, la quale è stata fortemente contrastata, sia dalla disinformazione che da effettivi attacchi informatici.</p>
+<p><em>è importante ricordare di come la campagna vaccinale della regione Lazio ha avuto uno stop in concomitanza con l'uscita delle 2°Dosi, per via di  un <strong>trojan cryptolocker</strong>.<br>
+Il <strong>Trojan Cryptolocker</strong> è un <strong><code>Ransomware</code></strong> ovvero un <em>Malware</em> che limita l'accesso dei dati (nello specifico del Cryptolocker, criptandoli), spesso bloccando il sistema e intimando l'utente a pagare per lo sblocco e la decriptazione dei dati, in questo specifico caso era stato richiesto un pagamento in <strong>Bitcoin</strong>, dell'equivalente di 5 millioni di euro.</em>
+</p>
+<em class="src">Source:</em> <a class="replink" href="https://roma.repubblica.it/cronaca/2021/08/01/news/covid_attacco_hacker_al_lazio_disattivati_sistemi_e_portale_della_rete_vaccinale-312554980/">La Repubblica</a> <em class="src">,</em><a class="replink" href="https://www.fanpage.it/roma/quanto-hanno-chiesto-di-riscatto-gli-hacker-alla-regione-lazio/">Fanpage</a>
+
+```{r, fig.align='center',echo=FALSE, out.width="70%",fig.width=12.3, fig.height=8}
+table(uno$Target.Class) / length(uno$Target.Class) -> a #frequenza relativa
+a[rev(order(a))] -> a #metto in ordine a seconda della frequenza maggiore
+sum(a[8:20]) -> others #ultimi elementi li raggruppo in other!! circa 20%
+a[1:8] -> a
+append(a,others,9) -> a
+Targets = c("Multiple Industries",
+            "Human health and social work activities",
+            "Individual",
+            "Public administration and defence",
+            "Education",
+            "Professional Scientific and technical activities", 
+            "Financial and insurance activities",
+            "Manufacturing", 
+            "Other")
+
+
+slices <- c(a)
+pct <- round(slices/sum(slices)*100)
+Targets <- paste(Targets, pct)
+Targets <- paste(Targets, "%", sep = "")
+pie(slices,labels = Targets, col=rainbow(length(Targets)),
+        radius = 1, lty=1, main="Obbiettivi più colpiti 2021") 
+```
+
+
+## Andamento Degli Durante L'Anno
+<p>Da questo grafico è possibile ottenere diverse informazioni, innanzitutto ogni anno ha una crescita sempre maggiore rispetto all'anno precedente, poi si nota uno strano andamento tra l'<strong>Aprile 2020</strong> ~ <strong>Maggio 2021</strong>, sicuramente dovuto al LockDown, infatti dal aprile 2020 (primo LockDown) c'è un incremento costante fino ad incontrare una grande depressione nel maggio 2021.
+Ad ogni modo, da maggio in poi l'andamento è molto simile al 2018.<br>
+In linea generale si può notare come ci sia un aumento di attacchi durante i periodi invernali, ed una breve depressione all'inizio del periodo estivo</p>
+```{r, fig.align='center',mecho=FALSE, out.width="70%",fig.width=10, fig.height=6}
+#-------------------------------------------------------------------------------------------------------
+under %>%###frequenza assoluta degli attacchi gruppati in base ai mesi
+  mutate(mese = months(as.Date(under$Date))) %>%#estrapolo il mese dalla data
+  group_by(mese) %>%
+  count(mese, sort = TRUE) -> uplus
+data.frame(uplus) ->uplus
+uplus[[1]] = c("gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novemmbre","dicembre")
+uplus[[2]] = c(115,133,98,100,117,100,132,85,106,116,129,106)
+colnames(uplus) <- c("Mesi", "Frequenza")
+#-------------------------------------------------------------------------------------------------------
+zero %>%###frequenza assoluta degli attacchi gruppati in base ai mesi
+  mutate(mese = months(as.Date(zero$Date))) %>%#estrapolo il mese dalla data
+  group_by(mese) %>%
+  count(mese, sort = TRUE) -> zuplus
+data.frame(zuplus) ->zuplus
+zuplus[[1]] = c("gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novemmbre","dicembre")
+zuplus[[2]] = c(160,191,187,145,187,194,192,205,214,231,199,227)
+colnames(zuplus) <- c("Mesi", "Frequenza")
+#-------------------------------------------------------------------------------------------------------
+vuplus <- data.frame(Mesi = c("gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novemmbre","dicembre"), Frequenza = c(0,0,0,0,0,0,0,0,0,0,0,0))
+##prendo i mesi della uno$Date ed elimino ciò che non indichi il mese
+substr(c(uno$Date), 0, 2) -> bar
+str_replace_all(bar, "/", "") -> bar #pulisco i dati dalle barre
+c(as.integer(bar)) -> bar # salvo il tutto come vettore
+ 
+for(x in 1:length(uno$Date)) {
+  vuplus <- adding(bar[x], vuplus)
+  } # finisco lanciando tutto in un ciclo for addando tutto a vuplus
+colnames(vuplus) <- c("Mesi", "Frequenza")
+#______________________________________________________________________________________________________________________
+crunch <-data.frame(uplus$Mesi, uplus$Frequenza, zuplus$Frequenza, vuplus$Frequenza) #unisco le tabelle frequenziali
+colnames(crunch) <- c("Mesi", "freq18", "freq20", "freq21") #rinomino le colonne
+crunch$Mesi <- factor(c("gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novemmbre","dicembre"), levels = c("gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novemmbre","dicembre")) #setto un ordine al vettore Mesi di crunch per plottare l'asse X in modo ordinato
+
+ggplot()+
+  geom_line(data=crunch, mapping=aes(x=Mesi, y=freq18, group=1, color="2018"),lwd=2.0)+
+  geom_point(data=crunch, mapping=aes(x=Mesi, y=freq18, color="2018"),lwd=3.0)+
+  geom_line(data=crunch, mapping=aes(x=Mesi, y=freq20,group=1, color="2020"),lwd=2.0)+
+  geom_point(data=crunch, mapping=aes(x=Mesi, y=freq20, color="2020"),lwd=3.0)+
+  geom_line(data=crunch, mapping=aes(x=Mesi, y=freq21,group=1, color="2021"),lwd=2.0)+
+  geom_point(data=crunch, mapping=aes(x=Mesi, y=freq21, color="2021"),lwd=3.0)+
+  ylab("Frequenza    Assoluta")+
+  xlab("Mesi")+
+  theme(
+    legend.title = element_text(face = "bold"),
+    legend.key = element_rect(fill = "white", colour = "black"),
+    panel.background = element_rect(fill = "#bfbfbf",
+                                colour = "#bfbfbf",
+                                size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                colour = "white"), 
+  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                colour = "white"),
+  plot.background = element_rect(fill = "#99b2aa"),
+  legend.box.background = element_rect(color="black", size=2)
+  )+
+  labs(color = "Anni")
+##  CONSIDERAZIONI!!!!!!!!
+# Esattamente come ci si aspettava, ogni anno ci sono più crimini informatici, ed ogni anno tranno il 2020, ha un pattern 
+# simile ovvero una maggiore frequenza in autunno ed inverno, e un calo nei periodi di ferie, ovvero prima marzo-maggio
+# e agosto, per poi avere una leggera ripresa a ottobre.
+  
+```
+
+
+## Classe Degli Attacchi
+<span class="flex-container">
+<ul id=fst>
+<li id=licc><strong><em id=cc>CC:</em></strong>Cyber Crime consiste in una attività criminosa, analoga a quella tradizionale ma caratterizzata dall’abuso di componenti della tecnologia dell’informazione (sia hardware che software).</li>
+<li id=lice><strong><em id=ce>CE:</em></strong> Cyber Espionage rappresenta una delle più importanti minacce dirette verso le aziende ed il settore pubblico. La sottrazione di know-how tecnologico, nonché di informazioni riservate.</li>
+</ul>
+<ul id=snd>
+<li id=licw><strong><em id=cw>CW:</em></strong>Cyber War si verifica mediante l'uso di attacchi informatici contro uno stato nemico o organizzazione, che causano danni paragonabili ad una guerra reale.</li>
+<li id=lihk><strong><em id=hk>HK:</em></strong>Hacktivismo si verifica quando attivisti politici o sociali utilizzano la tecnologia informatica per fare una dichiarazione a sostegno di una delle loro cause.</li>
+</ul>
+</span>
+<p></p>
+```{r, fig.align='center',mecho=FALSE, out.width="70%",fig.width=15, fig.height=6.5}
+c(table(under$Attack.Class)) -> cf18
+cf18[5] <- 0
+data.frame(cf18,c(table(zero$Attack.Class)),c(table(uno$Attack.Class))) -> yaxe
+colnames(yaxe) <- c("2018", "2020", "2021")
+
+barplot(as.matrix(yaxe),
+        main = "classi di attacchi",
+        xlab = "Class",
+        col = c("#0aa80f", "#900aa8", "#a8610a","#06ced1","#594e91"))
+legend("topleft",
+c("Cyber Crime", "Cyber Espionage", "Cyber Warfare", "Hacktivism", "N/A"),
+fill = c("#0aa80f", "#900aa8", "#a8610a","#06ced1","#594e91")
+) 
+#in questi tre anni vediamo un'aumentare di attacchi annui, con un significativo aumento sia degli Cyber Crime, e Cyber Espionage.
+#da tener in particolar attenzione l'aumento del 2020 rispetto al 2018
+```
+```{r, echo=FALSE}
+##CREO LE TABELLE DELLE FREQUENZE ASSOLUTE, DEGLI STATI COLPITI PER TUTTI E TRE GLI ANNI
+####2018
+normalization(under) -> map18
+addState(
+  newSpot(map18, sendchar(map18)), 
+  sendchar(map18)) -> map18
+delTwin(map18) -> map18
+#map18 <- map18[-c(1,42),]
+map18['ID'] <- settingID(map18)
+map18 <- map18[,c("ID","Stato","Frequenza")]
+
+###----------------------------------------------------------------------------
+#2020
+normalization(zero) ->  map20
+map20 <- map20[-c(109), ]
+map20[[3]][map20$ID == 108] <- 2
+map20[[2]] = gsub("([\n])","", map20[[2]])#elimino i caratteri nascosti \n
+addState(
+  newSpot(map20,sendchar(map20)),
+  sendchar(map20))->map20
+delTwin(map20) -> map20
+map20['ID'] <- settingID(map20)
+map20 <- map20[,c("ID","Stato","Frequenza")]
+###----------------------------------------------------------------------------
+#2021
+normalization(uno) -> map21
+map21 <- map21[-c(69,66), ]
+for (x in 1:2) {str_replace(map21[[2]], "[,/]", " ") -> map21[[2]]} #elimino le virgole e barre *****
+map21[[2]] = gsub("([\n])"," ", map21[[2]])#elimino i caratteri nascosti \n                     *****
+addState(
+  newSpot(map21,sendchar(map21)),
+  sendchar(map21))->map21
+delTwin(map21) -> map21
+map21['ID'] <- settingID(map21)
+map21 <- map21[,c("ID","Stato","Frequenza")]
+map21 <- map21[-c(length(map21[[1]])), ]#elimino l'ultima riga, la quale è un bug derivato dalla riga *****
+```
+```{r, echo=FALSE}
+fullname<- c("United Arab Emirates","Afghanistan","Austria","Australia","Barbados","Belgium","Brazil","Canada","Cocos Islands","Switzerland","Chile","China","Czech Republic","Germany","Denmark","Estonia","Spain","Finland","France","Gabon","UK","China","Ireland","Israel","India","INT","Iran","Italy","Japan","Cambodia","North Korea","South Korea","Mongolia","Malta","Mexico","Malaysia","Netherlands","Norway","New Zealand","Philippines","Pakistan","Puerto Rico","Palestine","Russia","Saudi Arabia","Senegal","Singapore","Slovakia","Sint Maarten","Syria","Thailand","Turkey","China","Ukraine","UK","USA","Vietnam","South Africa","Zimbabwe","Romania","UAE","Lebanon")
+years <- left_join(map18, left_join(map20,map21, by = 'Stato'), by = 'Stato')
+years$ID.x <- NULL
+years$ID.y <- NULL
+years %>%
+    mutate(Frequenza = select(., Frequenza,Frequenza.x,Frequenza.y) %>% rowSums(na.rm = TRUE)) ->years
+years$Frequenza.x <- NULL
+years$Frequenza.y <- NULL
+colnames(years) <- c("ID","region","Events")
+
+ws <- data.frame(unique(years$region), fullname)
+colnames(ws) <-c("region","country")
+years <- left_join(years,ws, by="region")
+colnames(years) <- c("ID","sigle","Events","region")
+years[[3]][12] =46+17+26# assegno alla cina i valori di Hong Kong e TaiWan 
+years <- years[-c(22,53),]
+```
+
+
+## Paesi Maggiormente Bersagliati
+<p>La mappa sotto riportata rappresenta i paesi con la maggior frequenza d'attacchi subiti nel corso di questi tre anni.<br>
+Vediamo subito che gli Stati Uniti sono al primo posto, tuttavia bisogna fare alcune considerazioni sulla correttezza della mappa:</p>
+<ol>
+<li>I casi presenti nei nostri Dataset, sono casi che hanno avuto una certa rilevanza mediatica, per ognuno di essi infatti esiste un articolo in almeno una testata giornalistica nazionale, quindi la scelta dei dati presenti nel campione statistico non è una scelta aleatoria di conseguenza le informazioni ricavabili dalla mappa devono essere solo indicative e veritiere solo parzialmente</li>
+<li>I dati utilizzati per questa ricerca provengono da un sito il cui proprietario è italiano <a class="rep" href="https://www.hackmageddon.com/">Hackmageddon</a>, quindi avrà avuto accesso a più materiale italiano</li>
+<li>Bisogna rammentare che non tutti gli stati sovrani sono dotati della stessa sincerità, un regime difficilmente rivelerà una propria inefficienza in temi di sicurezza. 
+Ma non solo, neanche per i paesi più democratici conviene divulgare certe informazioni, di conseguenza bisogna partire dal presupposto che la maggiorparte degli attacchi di Cyber Warfare sono occultati da attività di <em>Intelligence</em> e prima di una loro divulgazione c'è sicuramente una profonda analisi da parte dei servizi segreti. 
+Questo spiega anomalie come quella della <Strong>North Korea</strong></li>
+</ol>
+```{r, fig.align='center',echo=FALSE, out.width="100%",fig.width=14, fig.height=7}
+mapdata<-map_data("world")
+mapdata<-left_join(mapdata, years, by="region")
+
+map1 <- ggplot(mapdata, aes(x=long, y=lat, group=group))+
+  geom_polygon(aes(fill= Events), color= "black")+
+  scale_fill_gradient(low="green", high="red", na.value = "grey50", lim=c(min(years$Events),140), oob = scales::squish)+
+    theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        plot.background = element_rect(fill = "#0082c8"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        rect =  element_blank())
+map1
+```
+
+## Stati Sovrani Come Cyber Terroristi?
+<h5>"-The Incredible Rise of North Korea’s Hacking Army"<em style="font-size: small;">(New Yorker)</em></h5>
+<p>La North Korea è uno dei paesi più attivi dal punto di vista del <strong>Terrorismo Informatico</strong> a tal punto che la stessa <strong>FBI</strong>, <strong>CISA</strong>(<em style="font-size: small;">Cybersecurity and Infrastructure Security Agency</em>) ed il <strong>Dipartimento Del Tesoro Degli Stati Uniti</strong> hanno proferito a riguardo, affermando che la North Korea è coinvolta in moltissimi attacchi ai danni di infrastrutture sanitarie americane, ed altre società che fanno un utilizzo importante di <strong>Crypto Currency</strong>.</p>
+<p>Nell'Aprile 2022, due gruppi "Hacker" chiamati <strong><em>Lazarus</em></strong> e <strong><em>APT38</em></strong>, affiliati con i servizi segreti Nord Coreani sono responsabili per un furto di circa 620 millioni di dollari in <strong>Ethereum</strong> ai danni dell'azienda "<em>Sky Mavis</em>".<br>
+La North Korea spesso trafuga delle <strong>Cripto Valute</strong> per bypassare le sanzioni in vigore per finanziare la propria spesa militare</p>
+<br>
+<p>Tuttavia non solo la North Korea presenta un pericolo in tal senso, in passato anche il governo <strong>Statunitense</strong> e <strong>Israeliano</strong> sono stati fautori di pericolosissimi attacchi tramite la creazione di minacciosi malware come (<a class="rep" href="https://www.safetysecuritymagazine.com/articoli/stati-e-guerre-senza-confini-geografici/">Stuntex</a> e <a class="rep" href="https://en.wikipedia.org/wiki/Pegasus_(spyware)">Pegasus</a>)</p>
+<em class="src">Source:</em>
+<a class="replink" href="https://www.newyorker.com/magazine/2021/04/26/the-incredible-rise-of-north-koreas-hacking-army">New Yorker</a>
+<a class="replink" href="https://www.tag43.it/indagine-fbi-hacker-nord-corea-furto-criptovalute-sky-mavis-societa-videogiochi/">Tag43</a>
+<a class="replink" href="https://www.wired.it/internet/web/2018/05/30/corea-nord-hacking/">Wired</a>
+<a class="replink" href="https://techcrunch.com/2022/07/06/fbi-north-korea-targeting-healthcare/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAFWDQ_r6r0j2VH1HRZy_NLj_Fc5dFIOTiStWj0u7jsJQFkWvuUs_LYE2IC1hYGr0j21JqK9TV7_BATQBQN-wbIbIaJ65x6wXYbLNEHvDASG5T4JJ3-DXHOLIYuDL1mU1wc5JqSZXnwBaezeKBBYG1hp-2wu59BCH1dI3lR6ilA7r">TechCrunch</a>
+<a class="replink" href="https://www.repubblica.it/esteri/2022/02/06/news/corea_del_nord_arsenale_nucleare_rapporto_onu-336693992/">La Repubblica</a><br>
+<em class="src">Source:</em>
+<a class="replink" href="https://www.safetysecuritymagazine.com/articoli/stati-e-guerre-senza-confini-geografici/">Safety&Security</a>
+<a class="replink" href="https://en.wikipedia.org/wiki/Pegasus_(spyware)">Wikipedia</a>
+<a class="replink" href="https://www.repubblica.it/esteri/2022/07/29/news/pegasus_predator_spyware_per_spiare_cellulari_ue_eurodeputati_commissione-359628643/">La Repubblica</a></p>
+
+## circular 18
+```{r, fig.align='center',echo=FALSE, out.width="50%",fig.width=10, fig.height=10}
+color=c("#ea5545", "#f46a9b", "#ef9b20", "#edbf33",
+                "#ede15b", "#bdcf32", "#87bc45", "#27aeef", "#3832a8","#b33dc6")
+#Sistemo i dati e prendo i più grandi
+data.frame(table(under$Attack)) -> dis
+dis[order(dis$Freq, decreasing = TRUE), ] -> dis
+settingID(dis) -> dis[3]
+colnames(dis) <- c("Tipologia","Freq","ID")
+dis <- dis[,c("ID","Tipologia","Freq")]
+dis <- head(dis,10)
+for(i in 1:length(dis$Freq)){
+  if(dis$Freq[i]>200){
+  dis$Freq[i] <- dis$Freq[i]/2
+  }
+}
+#--------plotting
+empty_bar <- 1
+to_add <- matrix(NA, empty_bar, ncol(dis))
+colnames(to_add) <- colnames(dis)
+dis <- rbind(dis, to_add)
+dis$ID <- seq(1, nrow(dis))
+
+#labeling
+label_data <- dis
+number_of_bar <- nrow(dis)
+angle <-  90 - 360 * (label_data$ID-0.5) /number_of_bar 
+label_data$hjust<-ifelse( angle < -90, 1, 0)
+label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+circular18 <- ggplot(dis, aes(x=as.factor(ID), y=Freq)) +        
+  geom_bar(stat="identity", fill=color) +
+  ylim(-100,250) +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(rep(-2,4), "cm"),
+    panel.background = element_rect(fill = "#99b2aa",colour = "#99b2aa",size = 0.5, linetype = "solid"),
+     ) +
+  coord_polar(start = 0)+
+  geom_text(data=label_data, aes(x=ID, y=Freq+10, label=Tipologia, hjust=hjust),   color="black",alpha=1, size=4.0, angle= label_data$angle, inherit.aes = FALSE ) +
+  geom_text(x = 0, aes(y = -80, label = "Top 10  Metodologie"), size = 5)+
+  geom_text(x = 0, aes(y = -100, label = "Nel 2018"), size = 5)
+circular18
+```
+
+## circular 20
+```{r, fig.align='center',echo=FALSE, out.width="50%",fig.width=10, fig.height=10}
+#setting data
+data.frame(table(zero$Attack)) -> dis2
+dis2[order(dis2$Freq, decreasing = TRUE), ] -> dis2
+settingID(dis2) -> dis2[3]
+colnames(dis2) <- c("Tipologia","Freq","ID")
+dis2 <- dis2[,c("ID","Tipologia","Freq")]
+dis2 <- head(dis2,10)
+for(i in 1:length(dis2$Freq)){
+  if(dis2$Freq[i]>400){
+    dis2$Freq[i] <- 200
+  }
+  if(dis2$Freq[i]>200){
+  dis2$Freq[i] <- dis2$Freq[i]/2
+  }
+}
+#-----plotting
+empty_bar <- 1
+to_add <- matrix(NA, empty_bar, ncol(dis2))
+colnames(to_add) <- colnames(dis2)
+dis2 <- rbind(dis2, to_add)
+dis2$ID <- seq(1, nrow(dis2))
+
+#labeling
+label_data <- dis2
+number_of_bar <- nrow(dis2)
+angle <-  90 - 360 * (label_data$ID-0.5) /number_of_bar 
+label_data$hjust<-ifelse( angle < -90, 1, 0)
+label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+circular20 <- ggplot(dis2, aes(x=as.factor(ID), y=Freq)) +        
+  geom_bar(stat="identity", fill=color) +
+  ylim(-100,250) +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(rep(-2,4), "cm"),
+    panel.background = element_rect(fill = "#99b2aa",colour = "#99b2aa",size = 0.5, linetype = "solid"),
+     ) +
+  coord_polar(start = 0)+
+  geom_text(data=label_data, aes(x=ID, y=Freq+10, label=Tipologia, hjust=hjust),   color="black",alpha=1, size=4.0, angle= label_data$angle, inherit.aes = FALSE ) +
+  geom_text(x = 0, aes(y = -80, label = "Top 10  Metodologie"), size = 5)+
+  geom_text(x = 0, aes(y = -100, label = "Nel 2020"), size = 5)
+circular20
+```
+
+## circular 21
+```{r, fig.align='center',echo=FALSE, out.width="50%",fig.width=10, fig.height=10}
+#setting data
+data.frame(table(uno$Attack)) -> dis3
+dis3[order(dis3$Freq, decreasing = TRUE), ] -> dis3
+settingID(dis3) -> dis3[3]
+colnames(dis3) <- c("Tipologia","Freq","ID")
+dis3 <- dis3[,c("ID","Tipologia","Freq")]
+dis3 <- head(dis3,10)
+for(i in 1:length(dis3$Freq)){
+  if(dis3$Freq[i]>400){
+    dis3$Freq[i] <- 200
+  }
+  if(dis3$Freq[i]>200){
+  dis3$Freq[i] <- dis3$Freq[i]/2
+  }
+}
+#-----plotting
+empty_bar <- 1
+to_add <- matrix(NA, empty_bar, ncol(dis3))
+colnames(to_add) <- colnames(dis3)
+dis3 <- rbind(dis3, to_add)
+dis3$ID <- seq(1, nrow(dis3))
+
+#labeling
+label_data <- dis3
+number_of_bar <- nrow(dis3)
+angle <-  90 - 360 * (label_data$ID-0.5) /number_of_bar 
+label_data$hjust<-ifelse( angle < -90, 1, 0)
+label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+circular21 <- ggplot(dis3, aes(x=as.factor(ID), y=Freq)) +        
+  geom_bar(stat="identity", fill=color) +
+  ylim(-100,250) +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(rep(-2,4), "cm"),
+    panel.background = element_rect(fill = "#99b2aa",colour = "#99b2aa",size = 0.5, linetype = "solid"),
+     ) +
+  coord_polar(start = 0)+
+  geom_text(data=label_data, aes(x=ID, y=Freq+10, label=Tipologia, hjust=hjust),   color="black",alpha=1, size=4.0, angle= label_data$angle, inherit.aes = FALSE ) +
+  geom_text(x = 0, aes(y = -80, label = "Top 10  Metodologie"), size = 5)+
+  geom_text(x = 0, aes(y = -100, label = "Nel 2021"), size = 5)
+circular21
+```
+
+## sesto
+```{r, fig.align='center', echo=FALSE,out.width="100%",fig.width=10, fig.height=8}
+df <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-14/passwords.csv') %>% 
+  # Remove rows where the password is missing
+filter(!is.na(password))
+
+pwd <- df[c(1,2)]
+pwd[1] <- rev(pwd[[1]])
+a=c()
+b=c()
+for (x in 1:500){
+  rep(pwd[[2]][x],pwd[[1]][x])-> a
+  b <- append(b,a)
+}
+pwd <- as.data.frame(table(b))
+pwd[order(pwd$Freq, decreasing = TRUE), ] -> pwd
+
+
+
+wordcloud2(pwd, size=0.3,fontFamily = "Utopia",shape ="circle" , color='random-light', backgroundColor="black")
+
+```

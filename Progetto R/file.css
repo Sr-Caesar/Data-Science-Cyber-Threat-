@@ -1,0 +1,211 @@
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+body{
+  background-image:url("immagine.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0%;
+  margin: 0%;
+  color: white;
+  background-color: rgba(0,2,2,255);
+}
+.flex-container > span {
+  background-color: #f1f1f1;
+  width: 100px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
+
+#hacker{
+  text-align: center;
+  position: relative;
+}
+h1{
+  text-align: center;
+}
+
+a[class="replink"]{
+  font-size: 0.5em;
+  color:#02b331;
+  font-family: 'Times New Roman', Times, serif;
+}
+.src{
+  font-size:0.5em;
+  font-family: 'Times New Roman', Times, serif;
+}
+sup{
+  font-size: 0.6em;
+}
+
+#cc{
+  color: rgba(10,168,15,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(10,168,15,255);
+}
+#ce{
+  color: rgba(144,10,168,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(144,10,168,255);
+}
+#cw{
+  color: rgba(169,96,10,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(169,96,10,255);
+}
+#hk{
+  color: rgba(5,181,184,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(5,181,184,255);
+}
+#licc{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(10,168,15,255);
+}
+#lice{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(144,10,168,255);
+}
+#licw{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(169,96,10,255);
+}
+#lihk{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(5,181,184,255);
+}
+#fst{
+  padding-left: 10%;
+  padding-right: 10%;
+}
+#snd{
+  padding-right: 10%;
+  padding-left: 10%;
+}
+a[class="rep"]{
+  font-size: 1em;
+  color:#b80068;
+  font-family: 'Times New Roman', Times, serif;
+}
+#q{
+  color: rgba(235,84,69,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(235,84,69,255);
+}
+#qq{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(235,84,69,255);
+}
+#b{
+  color: rgba(245,106,154,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(245,106,154,255);
+}
+#bb{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(245,106,154,255);
+}
+#t{
+  color: rgba(239,154,33,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(239,154,33,255);
+}
+#tt{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(239,154,33,255);
+}
+#d{
+  color: rgba(236,190,51,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(236,190,51,255);
+}
+#dd{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(236,190,51,255);
+}
+#e{
+  color: rgba(236,224,91,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(236,224,91,255);
+}
+#ee{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(236,224,91,255);
+}
+#f{
+  color: rgba(188,207,51,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(188,207,51,255);
+}
+#ff{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(188,207,51,255);
+}
+#g{
+  color: rgba(135,189,68,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(135,189,68,255);
+}
+#gg{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(135,189,68,255);
+}
+#h{
+  color: rgba(39,175,238,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(39,175,238,255);
+}
+#hh{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(39,175,238,255);
+}
+#i{
+  color: rgba(56,51,169,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(56,51,169,255);
+}
+#ii{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(56,51,169,255);
+}
+#l{
+  color: rgba(178,65,196,255);
+  text-decoration-line: underline;
+  text-decoration-color: rgba(178,65,196,255);
+}
+#ll{
+  text-decoration-line: underline;
+  text-decoration-color: rgba(178,65,196,255);
+}
+#smol{
+  font-size: 0.7em;
+}
+#end{
+  margin-left: 25%;
+  margin-right: 25%;
+}
+#conclusion{
+  width: 50%;
+  text-align: center;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+#tit{
+  text-align: center;
+  color: red;
+}
+#coda{  
+  width: 50%;
+  text-align: center;
+  margin-right: 25%;
+  margin-left: 25%;
+}
+a[class="tail"]{
+  color: rgb(0, 255, 208);
+}
+#smol{
+  font-size: 0.5em;
+}
